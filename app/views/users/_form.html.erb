@@ -1,0 +1,76 @@
+<%= form_for @user, :html => { :class => "form-horizontal user" } do |f| %>
+
+  <% if @user.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @user.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :name, :class => 'control-label col-lg-2' %>
+    <div class="col-lg-10">
+      <%= f.text_field :name, :class => 'form-control' %>
+    </div>
+    <%=f.error_span(:name) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :uuid, :class => 'control-label col-lg-2' %>
+    <div class="col-lg-10">
+      <%= f.text_field :uuid, :class => 'form-control' %>
+    </div>
+    <%=f.error_span(:uuid) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :sex, :class => 'control-label col-lg-2' %>
+    <div class="col-lg-10">
+      <%= f.text_field :sex, :class => 'form-control' %>
+    </div>
+    <%=f.error_span(:sex) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :birthday, :class => 'control-label col-lg-2' %>
+    <div class="col-lg-10">
+      <%= f.text_field :birthday, :class => 'form-control' %>
+    </div>
+    <%=f.error_span(:birthday) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :desc, :class => 'control-label col-lg-2' %>
+    <div class="col-lg-10">
+      <%= f.text_field :desc, :class => 'form-control' %>
+    </div>
+    <%=f.error_span(:desc) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :publish, :class => 'control-label col-lg-2' %>
+    <div class="col-lg-10">
+      <%= f.text_field :publish, :class => 'form-control' %>
+    </div>
+    <%=f.error_span(:publish) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :prefecture_id, :class => 'control-label col-lg-2' %>
+    <div class="col-lg-10">
+      <%= f.text_field :prefecture_id, :class => 'form-control' %>
+    </div>
+    <%=f.error_span(:prefecture_id) %>
+  </div>
+
+  <div class="form-group">
+    <div class="col-lg-offset-2 col-lg-10">
+      <%= f.submit nil, :class => 'btn btn-primary' %>
+      <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                users_path, :class => 'btn btn-default' %>
+    </div>
+  </div>
+
+<% end %>

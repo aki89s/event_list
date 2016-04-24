@@ -18,5 +18,11 @@ module V1
         end
       end
     end
+
+    resource :users do
+      get :index do
+        response
+      end
+    end
   end
 end
