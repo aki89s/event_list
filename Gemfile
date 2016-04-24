@@ -14,6 +14,8 @@ gem 'therubyracer'
 gem 'less-rails'
 gem 'twitter-bootstrap-rails'
 
+gem 'grape'
+
 group :development, :test do
   gem 'byebug'
   gem 'web-console', '~> 2.0'
