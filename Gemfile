@@ -21,5 +21,22 @@ group :development, :test do
   gem 'byebug'
   gem 'web-console', '~> 2.0'
   gem 'spring'
+  gem 'pry-rails'
+  gem 'pry-doc'
+  gem 'pry-stack_explorer'
+  gem 'hirb'
+  gem 'hirb-unicode'
+  gem 'rails-flog', require: 'flog'
+  gem 'better_errors'
+  gem 'binding_of_caller'
+  gem 'awesome_print'
+  gem 'quiet_assets'
+end
+
+group :development do
+  gem 'guard-livereload'
+  gem 'rails-erd'
+  gem 'bullet'
+  gem 'rubocop', require: false
 end
 
