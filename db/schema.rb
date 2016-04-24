@@ -11,7 +11,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160424121406) do
+ActiveRecord::Schema.define(version: 20160424125225) do
+
+  create_table "events", force: :cascade do |t|
+    t.integer  "user_id",    limit: 4
+    t.string   "name",       limit: 255, default: "", null: false
+    t.string   "place",      limit: 255, default: "", null: false
+    t.datetime "start_date",                          null: false
+    t.datetime "end_date",                            null: false
+    t.string   "url",        limit: 255, default: "", null: false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+  end
+
+  add_index "events", ["end_date"], name: "index_events_on_end_date", using: :btree
+  add_index "events", ["name"], name: "index_events_on_name", using: :btree
+  add_index "events", ["start_date"], name: "index_events_on_start_date", using: :btree
 
   create_table "prefectures", force: :cascade do |t|
     t.string   "name",       limit: 255, null: false
