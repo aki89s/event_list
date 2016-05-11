@@ -4,10 +4,11 @@ class CreateUsers < ActiveRecord::Migration
       t.string :name, null: false, default: ''
       t.string :uuid, null: false
       t.integer :sex, default: 2
-      t.datetime :birthday, null: false
+      t.datetime :birthday, null: false, default: DateTime.now
       t.string :desc, default: ''
+      t.string :url, default: '', limit: 200
       t.integer :publish, default: 0
-      t.references :prefecture, null: false
+      t.references :prefecture, null: false, default: 48
 
       t.timestamps null: false
     end

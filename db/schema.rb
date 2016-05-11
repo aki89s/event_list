@@ -14,19 +14,22 @@
 ActiveRecord::Schema.define(version: 20160424125225) do
 
   create_table "events", force: :cascade do |t|
-    t.integer  "user_id",    limit: 4
-    t.string   "name",       limit: 255, default: "", null: false
-    t.string   "place",      limit: 255, default: "", null: false
-    t.datetime "start_date",                          null: false
-    t.datetime "end_date",                            null: false
-    t.string   "url",        limit: 255, default: "", null: false
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.integer  "user_id",       limit: 4,                null: false
+    t.integer  "prefecture_id", limit: 4,   default: 48, null: false
+    t.string   "name",          limit: 255, default: "", null: false
+    t.string   "place",         limit: 255, default: "", null: false
+    t.datetime "start_date",                             null: false
+    t.datetime "end_date",                               null: false
+    t.string   "url",           limit: 255, default: "", null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
   end
 
   add_index "events", ["end_date"], name: "index_events_on_end_date", using: :btree
   add_index "events", ["name"], name: "index_events_on_name", using: :btree
+  add_index "events", ["prefecture_id"], name: "index_events_on_prefecture_id", using: :btree
   add_index "events", ["start_date"], name: "index_events_on_start_date", using: :btree
+  add_index "events", ["user_id"], name: "index_events_on_user_id", using: :btree
 
   create_table "prefectures", force: :cascade do |t|
     t.string   "name",       limit: 255, null: false
@@ -37,15 +40,16 @@ ActiveRecord::Schema.define(version: 20160424125225) do
   add_index "prefectures", ["name"], name: "index_prefectures_on_name", unique: true, using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "name",          limit: 255, default: "", null: false
-    t.string   "uuid",          limit: 255,              null: false
+    t.string   "name",          limit: 255, default: "",                    null: false
+    t.string   "uuid",          limit: 255,                                 null: false
     t.integer  "sex",           limit: 4,   default: 2
-    t.datetime "birthday",                               null: false
+    t.datetime "birthday",                  default: '2016-05-01 14:03:33', null: false
     t.string   "desc",          limit: 255, default: ""
+    t.string   "url",           limit: 200, default: ""
     t.integer  "publish",       limit: 4,   default: 0
-    t.integer  "prefecture_id", limit: 4,                null: false
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
+    t.integer  "prefecture_id", limit: 4,   default: 48,                    null: false
+    t.datetime "created_at",                                                null: false
+    t.datetime "updated_at",                                                null: false
   end
 
   add_index "users", ["prefecture_id"], name: "index_users_on_prefecture_id", using: :btree
