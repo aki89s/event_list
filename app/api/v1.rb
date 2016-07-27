@@ -33,9 +33,48 @@ module V1
         user.update(uuid: params['uuid'], name: params['name'], desc: params['desc'])
         response(user: user.api_attributes, create: false)
       end
+
+      post :follow do
+        user = User.find_by(uuid: params['uuid'])
+        target = User.find_by(id: params['target_id'])
+        response(success: false) if user.blank? || target.blank?
+        follow = Follow.find_by(user: user, target_id: target.id)
+        if follow
+          response(success: false)
+          return
+        end
+        Follow.create(user: user, target_id: target.id)
+        response(success: true, follow_status: user.follow?(target))
+      end
+
+      post :unfollow do
+        user = User.find_by(uuid: params['uuid'])
+        target = User.find_by(id: params['target_id'])
+        response(success: false) if user.blank? || target.blank?
+        follow = Follow.find_by(user: user, target_id: target.id)
+        if follow.blank?
+          response(success: false)
+          return
+        end
+        follow.destroy
+        response(success: true, follow_status: user.follow?(target))
+      end
     end
 
     resource :events do
+      get :index do
+        events = Event.all
+        response(events: events.map(&:api_attributes))
+      end
+
+      get :show do
+        user = User.find_by(uuid: params['uuid'])
+        event = Event.find_by(id: params[:event_id])
+        response(event: event.api_attributes, user: event.user.api_attributes,
+                 follow_status: user.follow?(event.user),
+                 events: event.user.events.map(&:api_attributes))
+      end
+
       post :create do
         user = User.find_by(uuid: params['uuid'])
         response(create: false) if user.blank?
