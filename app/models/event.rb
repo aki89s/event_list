@@ -8,8 +8,8 @@ class Event < ActiveRecord::Base
       prefecture_id: prefecture_id,
       name: name,
       place: place,
-      start_date: start_date,
-      end_date: end_date,
+      start_date: start_date.to_s,
+      end_date: end_date.to_s,
       url: url
     }
   end

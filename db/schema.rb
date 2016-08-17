@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160724120639) do
+ActiveRecord::Schema.define(version: 20160727133148) do
 
   create_table "events", force: :cascade do |t|
     t.integer  "user_id",       limit: 4,                null: false
@@ -40,6 +40,13 @@ ActiveRecord::Schema.define(version: 20160724120639) do
 
   add_index "follows", ["target_id"], name: "index_follows_on_target_id", using: :btree
   add_index "follows", ["user_id", "target_id"], name: "index_follows_on_user_id_and_target_id", unique: true, using: :btree
+
+  create_table "likes", force: :cascade do |t|
+    t.integer  "user_id",    limit: 4, null: false
+    t.integer  "event_id",   limit: 4, null: false
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
 
   create_table "prefectures", force: :cascade do |t|
     t.string   "name",       limit: 255, null: false
