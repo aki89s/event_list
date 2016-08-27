@@ -111,6 +111,7 @@ module V1
         user = User.find_by(uuid: params['uuid'])
         event = Event.find_by(id: params[:event_id])
         response(event: event.api_attributes,
+                 detail: event.detail.try(&:api_attributes),
                  user: event.user.api_attributes,
                  follow_status: user.follow?(event.user),
                  like_status: user.like?(event),
@@ -128,9 +129,65 @@ module V1
                      place: params['address'],
                      start_date: params['start_date'].gsub(/[^0-9|:]/, '-').to_datetime,
                      end_date: params['end_date'].gsub(/[^0-9|:]/, '-').to_datetime,
-                     url: params['url'])
+                     url: params['url'],
+                     desc: params['desc']
+                    )
 
         response(create: true)
+      end
+
+      post :update do
+        user = User.find_by(uuid: params['uuid'])
+        response(update: false) if user.blank?
+
+        event = Event.find_by(id: params['event_id'])
+        response(update: false) if event.blank?
+
+        event.update(user: user,
+                     prefecture: Prefecture.find_by(name: params['prefecture']),
+                     name: params['name'],
+                     place: params['address'],
+                     start_date: params['start_date'].gsub(/[^0-9|:]/, '-').to_datetime,
+                     end_date: params['end_date'].gsub(/[^0-9|:]/, '-').to_datetime,
+                     url: params['url'],
+                     desc: params['desc']
+                    )
+        response(update: true)
+      end
+    end
+
+    resource :event_details do
+      get :show do
+        event = Event.find_by(id: params['event_id'])
+        if event.blank? || event.detail.blank?
+          response(detail: false)
+          return {}
+        end
+
+        response(detail: event.detail.api_attributes)
+      end
+
+      post :create_or_update do
+        user = User.find_by(uuid: params['uuid'])
+        response(create: false, update: false) if user.blank?
+
+        event = Event.find_by(id: params['event_id'])
+        if event.detail.blank?
+          detail = EventDetail.create(event: event,
+                                      price: params['price'],
+                                      access: params['access'],
+                                      caution: params['caution']
+                                     )
+          response(create: true, update: false, detail: detail.api_attributes) if event.blank?
+          return
+        else
+          event.detail.update(event: event,
+                              price: params['price'],
+                              access: params['access'],
+                              caution: params['caution']
+                             )
+          response(create: false, update: true, detail: event.detail.api_attributes) if event.blank?
+        end
       end
     end
 

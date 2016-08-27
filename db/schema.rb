@@ -11,18 +11,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160727133148) do
+ActiveRecord::Schema.define(version: 20160821123705) do
+
+  create_table "event_details", force: :cascade do |t|
+    t.integer  "event_id",   limit: 4,                null: false
+    t.integer  "price",      limit: 4,    default: 0, null: false
+    t.string   "access",     limit: 200
+    t.string   "caution",    limit: 3000
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+  end
 
   create_table "events", force: :cascade do |t|
-    t.integer  "user_id",       limit: 4,                null: false
-    t.integer  "prefecture_id", limit: 4,   default: 48, null: false
-    t.string   "name",          limit: 255, default: "", null: false
-    t.string   "place",         limit: 255, default: "", null: false
-    t.datetime "start_date",                             null: false
-    t.datetime "end_date",                               null: false
-    t.string   "url",           limit: 255, default: "", null: false
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
+    t.integer  "user_id",       limit: 4,                 null: false
+    t.integer  "prefecture_id", limit: 4,    default: 48, null: false
+    t.string   "name",          limit: 255,  default: "", null: false
+    t.string   "place",         limit: 255,  default: "", null: false
+    t.datetime "start_date",                              null: false
+    t.datetime "end_date",                                null: false
+    t.string   "url",           limit: 255,  default: "", null: false
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
+    t.string   "desc",          limit: 3000
   end
 
   add_index "events", ["end_date"], name: "index_events_on_end_date", using: :btree

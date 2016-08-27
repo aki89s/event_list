@@ -1,7 +1,9 @@
+# Event
 class Event < ActiveRecord::Base
   belongs_to :user
   belongs_to :prefecture
   has_many :likes
+  has_one :detail, foreign_key: 'event_id', class_name: 'EventDetail'
 
   def api_attributes
     { id: id,
@@ -10,7 +12,8 @@ class Event < ActiveRecord::Base
       place: place,
       start_date: start_date.to_s,
       end_date: end_date.to_s,
-      url: url
+      url: url,
+      desc: desc.to_s
     }
   end
 end
