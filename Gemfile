@@ -19,6 +19,7 @@ gem 'seed-fu'
 
 gem 'carrierwave'
 gem 'rmagick'
+gem 'fog'
 
 group :development, :test do
   gem 'byebug'

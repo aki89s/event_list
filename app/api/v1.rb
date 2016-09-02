@@ -99,11 +99,27 @@ module V1
         user = User.find_by(uuid: params['uuid'])
         response(events: user.likes.map(&:event).map(&:api_attributes))
       end
+
+      post :change_avatar do
+        user = User.find_by(uuid: params['uuid'])
+        params['image']['filename'] = params['uuid'] + params['image']['filename']
+        if params['selectedImage'] == '0'
+          user.update(avatar: params['image'])
+        else
+          user.update(bg_image: params['image'])
+        end
+        response(user: user.api_attributes)
+      end
     end
 
     resource :events do
       get :index do
         events = Event.all
+        response(events: events.map(&:api_attributes))
+      end
+
+      get :popular do
+        events = Like.group(:event_id).order('event_id').count.map { |r| Event.find(r[0]) }
         response(events: events.map(&:api_attributes))
       end
 
