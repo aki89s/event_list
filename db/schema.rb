@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160902110523) do
+ActiveRecord::Schema.define(version: 20160904083157) do
 
   create_table "event_details", force: :cascade do |t|
     t.integer  "event_id",   limit: 4,                null: false
@@ -33,6 +33,8 @@ ActiveRecord::Schema.define(version: 20160902110523) do
     t.datetime "created_at",                              null: false
     t.datetime "updated_at",                              null: false
     t.string   "desc",          limit: 3000
+    t.string   "thumb",         limit: 255
+    t.integer  "likes_count",   limit: 4,    default: 0,  null: false
   end
 
   add_index "events", ["end_date"], name: "index_events_on_end_date", using: :btree
@@ -77,8 +79,8 @@ ActiveRecord::Schema.define(version: 20160902110523) do
     t.integer  "prefecture_id", limit: 4,   default: 48,                    null: false
     t.datetime "created_at",                                                null: false
     t.datetime "updated_at",                                                null: false
-    t.string   "avatar",        limit: 255,                                 null: false
-    t.string   "bg_image",      limit: 255,                                 null: false
+    t.string   "avatar",        limit: 255
+    t.string   "bg_image",      limit: 255
   end
 
   add_index "users", ["prefecture_id"], name: "index_users_on_prefecture_id", using: :btree

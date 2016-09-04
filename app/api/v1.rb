@@ -119,8 +119,8 @@ module V1
       end
 
       get :popular do
-        events = Like.group(:event_id).order('event_id').count.map { |r| Event.find(r[0]) }
-        response(events: events.map(&:api_attributes))
+        events = Event.order(likes_count: :desc).map(&:api_attributes)
+        response(events: events)
       end
 
       get :show do
@@ -170,6 +170,27 @@ module V1
                     )
         response(update: true)
       end
+
+      post :create_with_image do
+        user = User.find_by(uuid: params['uuid'])
+        if user.blank?
+          response(create: false)
+          return
+        end
+
+        params['image']['filename'] = params['uuid'] + params['image']['filename']
+        Event.create(user: user,
+                     prefecture: Prefecture.find_by(name: params['prefecture']),
+                     name: params['name'],
+                     place: params['address'],
+                     start_date: params['start_date'].gsub(/[^0-9|:]/, '-').to_datetime,
+                     end_date: params['end_date'].gsub(/[^0-9|:]/, '-').to_datetime,
+                     url: params['url'],
+                     desc: params['desc'],
+                     thumb: params['image']
+                    )
+        response(create: true)
+      end
     end
 
     resource :event_details do
@@ -208,13 +229,17 @@ module V1
     end
 
     resource :likes do
-      post :create do
+      post :create_or_destroy do
         user = User.find_by(uuid: params['uuid'])
         event = Event.find_by(id: params['event_id'])
         response(create: false) if user.blank? || event.blank?
 
-        Like.create(user: user, event: event)
-        response(create: true)
+        if user.like? event
+          user.likes.find_by(event_id: event.id).destroy
+        else
+          Like.create(user: user, event: event)
+        end
+        response(like_status: user.like?(event))
       end
     end
   end
