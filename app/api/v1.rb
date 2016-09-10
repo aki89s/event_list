@@ -114,22 +114,27 @@ module V1
 
     resource :events do
       get :index do
-        events = Event.all
-        response(events: events.map(&:api_attributes))
+        prefecture = params['prefecture'] == '0' ? Prefecture.find_by(id: 48) : Prefecture.find_by(id: params['prefecture'])
+        category = params['category'] == '0' ? Category.find_by(id: 0) : Category.find_by(id: params['category'].to_i + 1)
+        events = Event.now_playing.prefecture(prefecture).category(category)
+        categories = Category.pluck(:name)
+        response(events: events.map(&:api_attributes), categories: categories)
       end
 
       get :popular do
-        events = Event.order(likes_count: :desc).map(&:api_attributes)
-        response(events: events)
+        prefecture = params['prefecture'] == '0' ? Prefecture.find_by(id: 48) : Prefecture.find_by(id: params['prefecture'])
+        category = params['category'] == '0' ? Category.find_by(id: 1) : Category.find_by(id: params['category'].to_i + 1)
+        events = Event.scheduled.prefecture(prefecture).category(category).order(likes_count: :desc).map(&:api_attributes)
+        categories = Category.pluck(:name)
+        response(events: events, categories: categories)
       end
 
       get :show do
-        user = User.find_by(uuid: params['uuid'])
-        event = Event.find_by(id: params[:event_id])
+        user = User.includes(:events).find_by(uuid: params['uuid'])
+        event = Event.includes(:detail).find_by(id: params[:event_id])
         response(event: event.api_attributes,
                  detail: event.detail.try(&:api_attributes),
                  user: event.user.api_attributes,
-                 follow_status: user.follow?(event.user),
                  like_status: user.like?(event),
                  users_event: user.events.include?(event)
                 )

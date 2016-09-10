@@ -11,7 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160904083157) do
+ActiveRecord::Schema.define(version: 20160910105450) do
+
+  create_table "categories", force: :cascade do |t|
+    t.string   "name",       limit: 255, null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
 
   create_table "event_details", force: :cascade do |t|
     t.integer  "event_id",   limit: 4,                null: false
@@ -35,8 +41,10 @@ ActiveRecord::Schema.define(version: 20160904083157) do
     t.string   "desc",          limit: 3000
     t.string   "thumb",         limit: 255
     t.integer  "likes_count",   limit: 4,    default: 0,  null: false
+    t.integer  "category_id",   limit: 4
   end
 
+  add_index "events", ["category_id"], name: "index_events_on_category_id", using: :btree
   add_index "events", ["end_date"], name: "index_events_on_end_date", using: :btree
   add_index "events", ["name"], name: "index_events_on_name", using: :btree
   add_index "events", ["prefecture_id"], name: "index_events_on_prefecture_id", using: :btree
